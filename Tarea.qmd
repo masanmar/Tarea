@@ -59,7 +59,7 @@ editor:
     wrap: 72
 ---
 
-**Introduction2**
+**Introduction**
 
 Discard and bycatch have been a problem in world fisheries. Considering
 the significant decreases in fish landing as of 1995 and increasing of

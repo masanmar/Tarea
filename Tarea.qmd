@@ -16,28 +16,16 @@ author:
           city: Valparaiso
           state: Chile
           postal-code: Chile
-  - name: EL YEI CI
+  - name: Albert Einstein
     affiliations: 
         - id: some-tech
-  #- name: Juan Carlos Saavedra-Nievas
-    #affiliations:
-       # - id: some-tech
-          # name: Instituto de Fomento Pesquero (IFOP)
-          # department: Department Name
-          # address: Street Address
-          # city: City
-          # state: State
-          # postal-code: Postal Code
-  #   note: |
-  # - name: Cat Memes
-  #   email: cat@example.com
-  #   affiliations:
-  #       - ref: another-u
-  #   note: Yet another author footnote.
-  # - name: Derek Zoolander
-  #   email: derek@example.com
-  #   affilations:
-  #       - ref: some-tech
+          name: Instituto de Fomento Pesquero (IFOP)
+          department: Fisheries Department
+          address: Blanco 839
+          city: Valparaiso
+          state: Chile
+          postal-code: Chile
+
 abstract: |
   Discard and bycatch have been a problem in world fisheries. During 2012, modifications on the Chilean Fisheries Law, including a permanent discard and bycatch research monitoring program (DBRMP) through scientific observers on-board in fisheries, were established to know and address this problem. With the aim of showing the steps and evolution of this process, indicators of discard and bycatch at demersal industrial fisheries between 2013 and 2020 years were assessed. Additionally, a summary of main regulatory measures were identified. The results showed that the involvement of fishermen was an important element to ensure the success of DBRMP and development of discard reduction plans. One of the biggest challenges to start the DBRMP was to achieve the engagement of them in a participatory process. Thus, meetings were held to provide information outreach about the law and DBRMP. After eight years from the beginning of the DBRMP, important improvements have been observed. Discard in trawling fisheries decreased on average 70% respect to initial values, while in long-line fisheries dropped 60%. Same trend was observed regarding bycatch of seabirds and sea lions. These results represent a key input to understand the discard problematic and the difficulties associated with their measurement, as well as the understanding of the underlying causes and solutions. Among the mandatory measures that has been implemented are; the discard ban of target species, adjustment of the non-target species catch rate, prohibition of bycatch, the mandatory use of bycatch mitigation measures systems as the grid device and tori lines used to avoid sea lions and seabirds, and the recent implementation of electronic monitoring. This work shows a brief overview of the main advances and solutions taken by Chilean fisheries government institutions regarding discard and bycatch, hoping to serve as a guideline for other countries which are advocated to address this matter.
   
@@ -67,7 +55,7 @@ stocks overfished, during 2012, modifications on the Chilean Fisheries
 Law with an ecosystem approach, including a permanent discard and
 bycatch research monitoring program (DBRMP) through scientific observers
 on-board in fisheries, were established to know and address this problem
-(SanMartin2016; Roman2021). The main objectives of this monitoring
+([@SanMartin2016], [@Roman2021]). The main  objectives of this monitoring
 program included the determination of levels of discards in each
 fishery, quantify bycatch (marine mammals, seabirds and marine turtles)
 and identify the causes. Results obtained by DBRMP have been key to
@@ -88,6 +76,7 @@ coverage](fig1.png){#fig-1}
 
 
 
+
 **Results**
 
 The results showed that the involvement of fishermen was an important
@@ -99,16 +88,30 @@ DBRMP. After eight years from the beginning of the DBRMP, important
 improvements have been observed. Discard in trawling fisheries showed
 variations in period evaluated, but in general decreased on average 70%
 respect to initial values. The same trend was observed in long-line
-fisheries, dropping around 60% with respect to the first years (Figure 2
-A). Similar trend was observed regarding bycatch of seabirds and sea
+fisheries, dropping around 60% with respect to the first years (@fig-2).
+Similar trend was observed regarding bycatch of seabirds and sea
 lions, nonetheless, longline fisheries have not registered bycatch of
 marine mammals and bycatch of seabird has been almost absent at
-crustacean fisheries (Figure 2, B y C). Four general kinds of causes of
+crustacean fisheries (@fig-3, @fig-4). Four general kinds of causes of
 discard were identified; regulations, operational, quality and factors
 associated with commercial issues. The last cause was the most important
 with factors such as catch of non-commercial species and non-commercial
 size. Bycatch of sea lions and seabirds were associated with
 entanglement and when the animals feeding the catch or bait.
+
+
+
+**Discussion**
+
+The BDRMP has enabled identification of causes and levels of discard and bycatch in Chilean fisheries. Each fishery has different species composition and levels of interaction with marine mammals and seabirds, consequently its management must be treated specifically. In this line, the BDRMP results helped the Undersecretary of Fisheries to establish reduction regulations and to improve fisheries management in Chile. Among the mandatory measures that have been implemented are; the discard ban of target species, adjustment of the non-target species catch rate, prohibition of bycatch, the mandatory use of bycatch mitigation measures systems as the grid device and tori lines used to avoid sea lions and seabirds. Is important to recognize that the historical evolution of discards and bycatch indicators in demersal fisheries has been favorable, with an important decrease. These results have been influenced by the increase the commitment of industry and fishermen and mandatory reduction measures established. Additionally, inputs delivered by BDRMP have been used to implement the electronic monitoring (EM) on board the industrial fleet by the control and enforcement agency (Sernapesca). Improving the monitoring and management of discards and bycatch in artisanal fisheries is the next step.
+
+
+
+ 
+
+
+# {.unnumbered}
+
 
 ```{r}
 #| warning: false
@@ -116,109 +119,87 @@ entanglement and when the animals feeding the catch or bait.
 library(readxl)
 library(grid)
 library(ggplot2)
+library(tidyverse)
+library(reshape2)
+library(dplyr)
 ```
 
 ```{r, fig.width=unit(10, "cm"), fig.height=unit(10, "cm")}
-#| label: fig-hist-log-sa
-#| out-width: 40%
-#| fig-cap: "Discards."
+#| label: fig-2
+#| out-width: 80%
+#| fig-cap: "Discards porportion in chilean demersal fleets"
 #| warning: false
 #| echo: false
 
 desc<-read_excel("Data.xlsx", sheet ="Desc")
-aves<-read_excel("Data.xlsx", sheet ="Aves_rate")
-mam<-read_excel("Data.xlsx", sheet ="Mam_rate")
 
-library(tidyverse)
-library(reshape2)
-library(dplyr)
-desc.long<-melt(desc,id.vars=c(1),measure.vars=c(2:9),variable.name = "Anno",
+desc.long<-melt(desc,id.vars=c(1),measure.vars=c(2:9),variable.name = "year",
           value.name = "Proporcion")#cap_total es la cpue estandarizada
 
 pd <- position_dodge(0.5)
-graf2<-ggplot(desc.long, aes(x=as.factor(Anno), y=Proporcion, group=Fleet, colour=Fleet)) +      
+graf2<-ggplot(desc.long, aes(x=as.factor(year), y=Proporcion, group=Fleet, colour=Fleet)) +      
   geom_point(size=3,position=pd) + geom_line()+
-  #geom_point(size=3,position=pd) + geom_line(arrow = arrow(),lwd=1)+
-  #geom_errorbar(aes(ymin=l.lim, ymax=u.lim),linewidth=0.5, width=.1,position=pd)+
-  labs(x="Año",
-       y="Proporción descarte (%)",
-       #title= "Estimación Total  crustáceos",
-       subtitle="Descarte total",
-       caption="Programa de Investigación Descarte Demersal",
+  labs(x="year",
+       y="Proportion (%)",
+       caption="Programa de Investigacion Descarte Demersal",
        tag = "T: Trawling; L: Longline") +theme_bw()+
   scale_x_discrete(breaks =seq(2013,2020,1))+
   scale_y_continuous(limit = c(0,40),breaks=seq(0,40,10))+
-  #facet_grid(~Proporción)
   facet_wrap(~Fleet,ncol=2)
 
 win.graph(width=8000, height=6000,pointsize=10)
 graf2+theme(legend.position = "none", plot.tag.position = c(0.7, 0.2), plot.margin=unit(c(1,1,1,1), "cm"))
 ```
 
-# Bibliography styles
-
-Here are two sample references: @Feynman1963118 @Dirac1953888
-@SanMartin2016 @Roman2021.
-
-By default, natbib will be used with the `authoryear` style, set in
-`classoption` variable in YAML. You can sets extra options with
-`natbiboptions` variable in YAML header. Example
-
-```         
-natbiboptions: longnamesfirst,angle,semicolon
-```
-
-There are various more specific bibliography styles available at
-<https://support.stmdocs.in/wiki/index.php?title=Model-wise_bibliographic_style_files>.
-To use one of these, add it in the header using, for example,
-`biblio-style: model1-num-names`.
-
-## Using CSL
-
-If `cite-method` is set to `citeproc` in `elsevier_article()`, then
-pandoc is used for citations instead of `natbib`. In this case, the
-`csl` option is used to format the references. By default, this template
-will provide an appropriate style, but alternative `csl` files are
-available from <https://www.zotero.org/styles?q=elsevier>. These can be
-downloaded and stored locally, or the url can be used as in the example
-header.
-
-# Equations
-
-Here is an equation: $$ 
-  f_{X}(x) = \left(\frac{\alpha}{\beta}\right)
-  \left(\frac{x}{\beta}\right)^{\alpha-1}
-  e^{-\left(\frac{x}{\beta}\right)^{\alpha}}; 
-  \alpha,\beta,x > 0 .
-$$
-
-Inline equations work as well: $\sum_{i = 2}^\infty\{\alpha_i^\beta\}$
-
-# Figures and tables
-
-@fig-meaningless is generated using an R chunk.
-
-```{r}
-#| label: fig-meaningless
-#| fig-cap: A meaningless scatterplot
-#| fig-width: 5
-#| fig-height: 5
-#| fig-align: center
-#| out-width: 50%
+```{r, fig.width=unit(10, "cm"), fig.height=unit(10, "cm")}
+#| label: fig-3
+#| out-width: 80%
+#| fig-cap: "Sea lions bycatch rate"
+#| warning: false
 #| echo: false
-plot(runif(25), runif(25))
+
+mam<-read_excel("Data.xlsx", sheet ="Mam_rate")
+
+rate_mam.long<-melt(mam,id.vars=c(1),measure.vars=c(2:8),variable.name = "year",
+                     value.name = "Tasa")#cap_total es la cpue estandarizada
+
+pd <- position_dodge(0.5)
+graf3<-ggplot(rate_mam.long, aes(x=as.factor(year), y=Tasa, group=Fleet, colour=Fleet)) +     
+  geom_point(size=3,position=pd) + geom_line()+
+  labs(x="year",
+       y="Rate (ind./set)",
+       caption="Programa de Investigacion Descarte Demersal",
+       tag = "T: Trawling") +theme_bw()+
+  scale_x_discrete(breaks =seq(2015,2021,1))+
+  facet_wrap(~Fleet,ncol=2, scales =  "free")
+
+win.graph(width=8000, height=6000,pointsize=10)
+graf3+theme(legend.position = "none", plot.tag.position = c(0.7, 0.2), plot.margin=unit(c(1,1,1,1), "cm"))
 ```
 
-# Tables coming from R
 
-Tables can also be generated using R chunks, as shown in @tbl-simple
-example.
+```{r, fig.width=unit(10, "cm"), fig.height=unit(10, "cm")}
+#| label: fig-4
+#| out-width: 80%
+#| fig-cap: "Seabirds bycatch rate"
+#| warning: false
+#| echo: false
 
-```{r}
-#| label: tbl-simple
-#| tbl-cap: Caption centered above table
-#| echo: true
-knitr::kable(head(mtcars)[,1:4])
+aves<-read_excel("Data.xlsx", sheet ="Aves_rate")
+
+rate_aves.long<-melt(aves,id.vars=c(1),measure.vars=c(2:7),variable.name = "year",
+                value.name = "Tasa")#cap_total es la cpue estandarizada
+
+pd <- position_dodge(0.5)
+graf4<-ggplot(rate_aves.long, aes(x=as.factor(year), y=Tasa, group=Fleet, colour=Fleet)) +    
+  geom_point(size=3,position=pd) + geom_line(arrow = arrow(),lwd=1)+
+  labs(x="year",
+       y="Rate (ind./set (T) - ind./1000 hoock (L))",
+       caption="Programa de Investigacion Descarte Demersal",
+       tag = "T: Trawling; L: Longline") +theme_bw()+
+  scale_x_discrete(breaks =seq(2015,2020,1))+
+  facet_wrap(~Fleet,ncol=2, scales =  "free")
+
+win.graph(width=8000, height=6000,pointsize=10)
+graf4+theme(legend.position = "none", plot.tag.position = c(0.7, 0.2), plot.margin=unit(c(1,1,1,1), "cm"))
 ```
-
-# References {.unnumbered}
